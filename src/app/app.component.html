@@ -1,0 +1,10 @@
+<div
+  class="drag-drop-container"
+  (mousedown)="mouseDownHandler($event)"
+  (mouseup)="mouseUpHandler($event)"
+  (mousemove)="mouseMoveHandler($event)"
+>
+  <div #box class="box draggable">
+    <p>Here is a box of content.</p>
+  </div>
+</div>
