@@ -12,9 +12,27 @@ p {
 .box {
   display: inline-block;
   padding: 20px;
-  background-color: blue;
+  background-color: rgb(80, 80, 180);
   color: white;
   position: relative;
   top: 0;
   left: 0;
+  cursor: grab;
+}
+.box.dragging {
+  background-color: rgba(0, 107, 0, 0.8);
+  cursor: grabbing;
+}
+
+#visualisePos {
+  width: 7px;
+  height: 7px;
+  border-radius: 100%;
+  box-sizing: border-box;
+  border: 2px solid rgba(255, 0, 0, 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
 }

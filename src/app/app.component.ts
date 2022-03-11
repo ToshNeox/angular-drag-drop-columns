@@ -6,7 +6,7 @@ import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  @ViewChild('box') public box: ElementRef;
+  @ViewChild('visualisePos') public visualisePos: ElementRef;
 
   private _renderer2: Renderer2;
   private _dragElement: Element = null;
@@ -19,11 +19,12 @@ export class AppComponent {
     this._renderer2 = renderer2;
   }
 
-  public setBoxColour(el: EventTarget, colour: string): void {
-    this._renderer2.setStyle(el, 'background-color', colour);
-  }
+  public updateBoxPosition(el: Element): void {
+    this.visualisePosition(
+      this._mouseX - this._dragOffsetX,
+      this._mouseY - this._dragOffsetY
+    );
 
-  public updateBoxPosition(el: EventTarget): void {
     const xPos = this._mouseX - this._dragOffsetX;
     const yPos = this._mouseY - this._dragOffsetY;
 
@@ -31,12 +32,9 @@ export class AppComponent {
     this._renderer2.setStyle(el, 'top', yPos + 'px');
   }
 
-  public startDrag(el: Element): void {
-    this._dragElement = el;
-  }
-
-  public endDrag(): void {
-    this._dragElement = null;
+  public clearBoxPosition(el: Element): void {
+    this._renderer2.setStyle(el, 'left', 0);
+    this._renderer2.setStyle(el, 'top', 0);
   }
 
   public isDragActive(): boolean {
@@ -46,27 +44,31 @@ export class AppComponent {
   public mouseDownHandler(ev: MouseEvent): void {
     const target = ev.target as HTMLDivElement;
 
-    if (!target.classList.contains('draggable')) {
+    if (!target.classList.contains('draggable') || ev.button !== 0) {
       return;
     }
 
     console.log('[ev] mouseDown', ev);
 
-    this._dragOffsetX = ev.clientX - target.offsetLeft;
-    this._dragOffsetY = ev.clientY - target.offsetTop;
+    // this.visualisePosition(ev.pageX, ev.pageY);
 
-    this.startDrag(target);
-    this.setBoxColour(this._dragElement, 'green');
+    this._dragOffsetX = ev.pageX - target.offsetLeft;
+    this._dragOffsetY = ev.pageY - target.offsetTop;
+
+    this._dragElement = target;
+    this._dragElement.classList.add('dragging');
   }
 
   public mouseUpHandler(ev: Event): void {
     console.log('[ev] mouseUp');
 
-    if (this.isDragActive()) {
-      this.setBoxColour(this._dragElement, 'blue');
+    if (!this.isDragActive()) {
+      return;
     }
 
-    this.endDrag();
+    this.clearBoxPosition(this._dragElement);
+    this._dragElement.classList.remove('dragging');
+    this._dragElement = null;
   }
 
   public dragHandler(ev: Event): void {
@@ -74,8 +76,6 @@ export class AppComponent {
   }
 
   public mouseMoveHandler(ev: MouseEvent): void {
-    // console.log('[ev] mouseMove');
-
     if (!this.isDragActive()) {
       return;
     }
@@ -84,5 +84,18 @@ export class AppComponent {
     this._mouseY = ev.clientY;
 
     this.updateBoxPosition(this._dragElement);
+  }
+
+  public visualisePosition(x: number, y: number) {
+    this._renderer2.setStyle(
+      this.visualisePos.nativeElement,
+      'left',
+      x - 3 + 'px'
+    );
+    this._renderer2.setStyle(
+      this.visualisePos.nativeElement,
+      'top',
+      y - 3 + 'px'
+    );
   }
 }
