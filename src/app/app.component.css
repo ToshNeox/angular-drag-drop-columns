@@ -7,6 +7,7 @@ p {
   height: 100%;
   border: 1px dashed rgba(255, 0, 0, 0.3);
   box-sizing: border-box;
+  position: relative;
 }
 
 .box {
@@ -14,7 +15,6 @@ p {
   padding: 20px;
   background-color: rgb(80, 80, 180);
   color: white;
-  position: relative;
   top: 0;
   left: 0;
   cursor: grab;
@@ -22,6 +22,7 @@ p {
 .box.dragging {
   background-color: rgba(0, 107, 0, 0.8);
   cursor: grabbing;
+  position: absolute;
 }
 
 #visualisePos {
