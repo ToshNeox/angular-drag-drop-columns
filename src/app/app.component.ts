@@ -59,12 +59,17 @@ export class AppComponent {
     this._dragElement.classList.add('dragging');
   }
 
-  public mouseUpHandler(ev: Event): void {
+  public mouseUpHandler(ev: MouseEvent): void {
     console.log('[ev] mouseUp');
 
     if (!this.isDragActive()) {
       return;
     }
+
+    console.log(
+      'elements under point',
+      document.elementsFromPoint(ev.pageX, ev.pageY)
+    );
 
     this.clearBoxPosition(this._dragElement);
     this._dragElement.classList.remove('dragging');
